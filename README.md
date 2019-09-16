@@ -6,7 +6,7 @@
 
 
 
-# GpGAN - Graphical perception based Generative Adversarial Nets
+# GpGAN - Graphical perception based GAN
 ### Objective
 The goal of this project is to generate stimuli using generator and generalize the discriminator to predict the variations in translation and stroke of stimuli using random noise.
 
@@ -26,7 +26,7 @@ To Predict trained model:
     2. Run ModelPrediction.py on python 3
 
 ### Architecture:
-Graphical perception technique involves visual decoding of qualitative and quantitative information from the graphs as demonstrated by Cleveland and Mcgill[[1]]. This work is based on Evaluating Graphical perception with CNN where we have experimented the hypothesis (H1.4)[[2]] with GAN. The GAN network [[3]] is treated as deeply convoluted network where generator produces newer representation of visual stimuli and discriminator should generalize to the added variations in stimuli. 
+Graphical perception technique involves visual decoding of qualitative and quantitative information from the graphs as demonstrated by Cleveland and Mcgill[[1]]. This work is based on Evaluating Graphical perception with CNN where we have experimented the hypothesis (H1.4)[[2]] with GAN. The GAN network [[3]] is treated as deeply convoluted network where generator produces newer representation of visual stimuli and discriminator model would eventually generalize to newer added variations in stimuli. 
 
 ### Visualization:
 

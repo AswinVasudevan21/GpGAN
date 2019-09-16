@@ -1,0 +1,7 @@
+numpy
+matplotlib
+scikit-image
+keras
+cv2
+
+

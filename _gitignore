@@ -1,0 +1,7 @@
+# Generated Files
+
+.DS_Store
+*.pyc
+.idea/
+__pycache__
+

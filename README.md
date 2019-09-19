@@ -38,6 +38,7 @@ Graphical perception technique involves visual decoding of qualitative and quant
 
 ### Future Work:
 Our next objective is to make discriminator model generalize to predict the random noise added stimuli.
+Fine tune model with hyper parameters 
 
 ### References:
 [[1]]: http://euclid.psych.yorku.ca/www/psy6135/papers/ClevelandMcGill1984.pdf <br>

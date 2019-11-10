@@ -19,5 +19,22 @@ class DataGenerator:
             image_name = dataset_path + 'length' + str(labels[i]) + '.png'
             matplotlib.image.imsave(image_name, images[i])
 
+    def generatePieChart(self):
+
+        labels = ['A', 'B', 'C', 'D']
+        sizes = [10, 20, 30, 40]
+        colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral']
+        plt.figure(figsize=(1, 1))
+        patches, texts = plt.pie(sizes, colors=colors, shadow=True, startangle=90)
+
+        plt.axis('equal')
+        plt.tight_layout()
+
+        plt.savefig("pie101.png")
+        plt.show()
+
+datagen = DataGenerator()
+datagen.generatePieChart()
+
 
 

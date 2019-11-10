@@ -1,6 +1,7 @@
 import time
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 from GpGAN.DataAugmentation import DataAugmentation
 from GpGAN.ResultAnalyzer import ResultAnalyzer
@@ -11,6 +12,7 @@ from keras import backend as K
 
 from GpGAN.GanModelCreator import GanModelCreator
 from GpGAN.Perception.figure1 import Figure1
+from GpGAN.Perception.figure12 import Figure12
 from GpGAN.ModelTraining import ModelTraining
 
 
@@ -18,6 +20,140 @@ from GpGAN.ModelTraining import ModelTraining
 class ModelPipeline:
     def __init__(self):
         pass
+
+    def prepareBarXandY(self):
+        EXPERIMENT = "Figure12.data_to_framed_rectangles"
+        DATATYPE = eval(EXPERIMENT)
+        train_counter = 0
+        val_counter = 0
+        test_counter = 0
+        train_target = 6000
+        val_target = 2000
+        test_target = 2000
+        NOISE=False
+
+        train_labels = []
+        val_labels = []
+        test_labels = []
+
+        X_train = np.zeros((train_target, 100, 100), dtype=np.float32)
+        y_train = np.zeros((train_target, 2), dtype=np.float32)
+
+        X_val = np.zeros((val_target, 100, 100), dtype=np.float32)
+        y_val = np.zeros((val_target, 2), dtype=np.float32)
+
+        X_test = np.zeros((test_target, 100, 100), dtype=np.float32)
+        y_test = np.zeros((test_target, 2), dtype=np.float32)
+
+        t0 = time.time()
+
+        all_counter = 0
+        while train_counter < train_target or val_counter < val_target or test_counter < test_target:
+
+            all_counter += 1
+
+            data, label, parameters = Figure12.generate_datapoint()
+
+            pot = np.random.choice(3)
+
+            # sometimes we know which pot is right
+            if label in train_labels:
+                pot = 0
+            if label in val_labels:
+                pot = 1
+            if label in test_labels:
+                pot = 2
+
+            if pot == 0 and train_counter < train_target:
+
+                if label not in train_labels:
+                    train_labels.append(label)
+
+                #
+                image = DATATYPE(data)
+                image = image.astype(np.float32)
+
+                # add noise?
+                if NOISE:
+                    image += np.random.uniform(0, 0.05, (100, 100))
+
+                # safe to add to training
+                X_train[train_counter] = image
+                y_train[train_counter] = label
+                train_counter += 1
+
+            elif pot == 1 and val_counter < val_target:
+
+                if label not in val_labels:
+                    val_labels.append(label)
+
+                image = DATATYPE(data)
+                image = image.astype(np.float32)
+
+                # add noise?
+                if NOISE:
+                    image += np.random.uniform(0, 0.05, (100, 100))
+
+                # safe to add to training
+                X_val[val_counter] = image
+                y_val[val_counter] = label
+                val_counter += 1
+
+            elif pot == 2 and test_counter < test_target:
+
+                if label not in test_labels:
+                    test_labels.append(label)
+
+                image = DATATYPE(data)
+                image = image.astype(np.float32)
+
+                # add noise?
+                if NOISE:
+                    image += np.random.uniform(0, 0.05, (100, 100))
+
+                # safe to add to training
+                X_test[test_counter] = image
+                y_test[test_counter] = label
+                test_counter += 1
+
+        print
+        'Done', time.time() - t0, 'seconds (', all_counter, 'iterations)'
+        #
+        #
+        #
+
+        #
+        #
+        # NORMALIZE DATA IN-PLACE (BUT SEPERATELY)
+        #
+        #
+        X_min = X_train.min()
+        X_max = X_train.max()
+        y_min = y_train.min()
+        y_max = y_train.max()
+
+        # scale in place
+        X_train -= X_min
+        X_train /= (X_max - X_min)
+        y_train -= y_min
+        y_train /= (y_max - y_min)
+
+        X_val -= X_min
+        X_val /= (X_max - X_min)
+        y_val -= y_min
+        y_val /= (y_max - y_min)
+
+        X_test -= X_min
+        X_test /= (X_max - X_min)
+        y_test -= y_min
+        y_test /= (y_max - y_min)
+
+        # normalize to -.5 .. .5
+        X_train -= .5
+        X_val -= .5
+        X_test -= .5
+
+        return X_train, y_train, X_test, y_test
 
     def prepareXandY(self):
         train_target = 600
@@ -147,7 +283,7 @@ class ModelPipeline:
 
 #setting up parameters
 model_pipeline = ModelPipeline()
-X_train,y_train,X_test,y_test=model_pipeline.prepareXandY()
+X_train,y_train,X_test,y_test=model_pipeline.prepareBarXandY()
 real_X = X_train
 #X_train = (X_train.astype(np.float32) - 127.5)/127.5
 X_train = X_train[:, np.newaxis, :, :]
@@ -170,10 +306,10 @@ print("Completed GAN setup")
 
 #Model Training
 model_training = ModelTraining()
-epochs=10
-batchsize = 128
-generator_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_generator_epoch_'+str(epochs)+'.h5'
-discriminator_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_discriminator_epoch_'+str(epochs)+'.h5'
+epochs=100
+batchsize = 256
+generator_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_bargenerator_epoch_'+str(epochs)+'.h5'
+discriminator_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_bardiscriminator_epoch_'+str(epochs)+'.h5'
 print("Model training started")
 model_training.trainGAN(epochs,batchsize,gan,X_train,generator,discriminator, generator_path,discriminator_path)
 print("Completed Model Training")

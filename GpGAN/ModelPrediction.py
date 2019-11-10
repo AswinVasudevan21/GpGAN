@@ -33,7 +33,7 @@ class ModelPrediction:
 
 
 model_prediction = ModelPrediction()
-epochs = 10
-model_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_generator_epoch_10.h5'
+epochs = 100
+model_path = '/home/aswin/PycharmProjects/GpGAN/models/dcgan_bargenerator_epoch_100.h5'
 model_prediction.generateOneGanStimuli(epochs, model_path)
 model_prediction.plotGeneratedImages(epochs, model_path)

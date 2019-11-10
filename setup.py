@@ -16,7 +16,7 @@ setup(
     description='Graphical perception based GAN',
     long_description=readme,
     author='Daniel Haehn, Aswin Vasudevan',
-    author_email='avasudevan@sensoryinc.com',
+    author_email='aswinv@bu.edu',
     url='',
     license=license
 )
